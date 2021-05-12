@@ -1,5 +1,6 @@
 package com.appsdeveloperblog.estore.productsservice.queries;
 
+import com.appsdeveloperblog.estore.core.events.ProductReservedEvent;
 import com.appsdeveloperblog.estore.productsservice.core.events.ProductCreatedEvent;
 import com.appsdeveloperblog.estore.productsservice.entities.ProductEntity;
 import com.appsdeveloperblog.estore.productsservice.repository.ProductsRepository;
@@ -46,5 +47,12 @@ public class ProductsEventHandler {
         }
 
 
+    }
+    @EventHandler
+    public void on(ProductReservedEvent productReservedEvent)
+    {
+        ProductEntity productEntity=productsRepository.findByProductId(productReservedEvent.getProductId());
+        productEntity.setQuantity(productEntity.getQuantity()-productReservedEvent.getQuantity());
+        productsRepository.save(productEntity);
     }
 }
